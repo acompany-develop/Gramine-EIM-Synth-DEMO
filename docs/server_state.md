@@ -4,16 +4,28 @@ Gramine-EIM-Synthの状態を把握するためのステータスについて記
 
 # 確認方法
 
-`GET /status`にアクセスし、レスポンスとして返されるステータスを確認する.
+// TODO: 準備中につき順次共有
 
-# ステータス一覧
+# レスポンス形式（変更可能性あり）
 
-| ステータス | 意味 |
-| --- | --- |
-| (なし) | 初期状態 |
-| NONE | 初期状態 |
-| FIRST_FILE_RECEIVED | 1つ目のファイルが受理された |
-| FIRST_FILE_SAVED | 1つ目のファイルが保存され、2つ目のファイルを受理する準備が整った |
-| SECOND_FILE_RECEIVED | 2つ目のファイルが受理された |
-| ID_MATCHED | 1つ目のファイルと2つ目のファイルのIDマッチングが完了し、学習の準備が整った |
-| TRAINED | マッチング済みデータを元に学習が完了し、学習モデルダウンロードの準備が整った |
+```json
+{
+	"health": "healthy",
+	"server_state": {
+        "message": "Server Initialized",
+        "status_code": 0
+	},
+	"version": "v1.2.3"
+}
+```
+
+# ステータス一覧（変更可能性あり）
+
+| status_code | message | 意味 |
+| ---- | ---- | ---- |
+| 0 | Server Initialized | 初期状態 |
+| 1 | First-File Received | 1つ目のファイルが受理された |
+| 2 | First-File Saved | 1つ目のファイルが保存され、2つ目のファイルを受理する準備が整った |
+| 3 | Second-File Received | 2つ目のファイルが受理された |
+| 4 | ID Matched | 1つ目のファイルと2つ目のファイルのIDマッチングが完了し、学習の準備が整った |
+| 5 | Model Trained | マッチング済みデータを元に学習が完了し、学習モデルダウンロードの準備が整った |
