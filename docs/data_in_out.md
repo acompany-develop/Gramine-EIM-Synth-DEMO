@@ -43,6 +43,7 @@ pickle (cloudpickle)
 * `self.dataloader_sampler`
 * `self.model.model._original_cond`
 * `self._schema` と `self._training_schema`  (s とする) 内の以下
+    * `s.data`
     * `s.domain` の各 value d について
         * `d.data`
         * `d.marginal_distribution`
