@@ -1,5 +1,13 @@
 # 概要
 
+# 動作確認済み条件
+- OS
+    - Ubuntu22.04
+- CPU
+    - x86/64 Intel Cascade Lake CPU (n2-standard-16)
+- メモリ
+    - 64GB以上
+
 # csv要件
 * 行数1千万以下  
 * 利用可能文字を`,`で区切ったデータ
@@ -17,5 +25,6 @@
 英小文字 `abcdefghijklmnopqrstuvwxyz`  
 英大文字 `ABCDEFGHIJKLMNOPQRSTUVWXYZ`  
 記号 `._-`
+
 # 動作保証されていないcsvの例
 準備中
