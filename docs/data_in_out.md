@@ -45,10 +45,10 @@ pickle (cloudpickle)
     * `s._test_idx`
     * `s._categorical_value_to_row_`
 ### バージョンについて
-互換性維持のため、保存実行環境と読込実行環境上で CustomCTGANPlugin のベースとなる synthcity のバージョンを合わせることを推奨する
+互換性維持のため、保存実行環境と読込実行環境上で `CustomCTGANPlugin` のベースとなる synthcity のバージョンを合わせることを推奨する
 
-TODO : (現在の synthcity のバージョンを書いておく)
-TODO : (python バージョンもあるとよいかも)
+Python 3.10  
+synthcity 0.2.10
 
 # 入出力例
 準備中
