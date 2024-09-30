@@ -3,10 +3,10 @@
 # 用語
 | 用語 | 説明 |
 | --- | --- |
-| EIM | Enclaved ID Matching, Serverが2つのcsvを隔離領域でmatchingする|
+| EIM | Enclaved ID Matching、Serverが2つのcsvを隔離領域でmatchingする|
 | Synth | matching結果を用いてServerの隔離領域でCTGANを行い合成データのモデルを作成する |
 | Gramine-EIM-Synth | 2つのClientがServerにcsvを送信し、ServerはEIM,Synthをして作成した合成データのモデルをClientに返送する 
-| RA | Remote Attestation, SGXが安全であることを示し、安全なSSL通信を行うようにするプロトコル |
+| RA | Remote Attestation、SGXが安全であることを示し、安全なSSL通信を行うようにするプロトコル |
 
 # ディレクトリ概要
 ```
