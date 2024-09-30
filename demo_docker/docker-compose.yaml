@@ -24,7 +24,6 @@ services:
       - '-c'
       - |
         rm -f /sync/* && \
-        pwd && ls -al && \
         ./matching ./settings_client.ini /data/data.csv && \
         touch /sync/firm_demo0_eim_done # 終了ファイルの作成
 
