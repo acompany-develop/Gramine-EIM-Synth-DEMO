@@ -1,0 +1,72 @@
+version: '3.3'
+
+x-build: &build
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      VERSION: "0.0.0"
+
+services:
+  firm_demo0_eim:
+    <<: *build
+    volumes:
+      - sync_volume:/sync
+      - type: bind
+        source: bind/Client0/settings_client.ini
+        target: /settings_client.ini
+      - type: bind
+        source: bind/Client0/data/sample_data.csv
+        target: /data/data.csv
+    working_dir: /
+    command:
+      - /bin/bash
+      - '-c'
+      - |
+        rm -f /sync/* && \
+        ./matching ./settings_client.ini /data/data.csv && \
+        touch /sync/firm_demo0_eim_done # 終了ファイルの作成
+
+  firm_demo1_eim:
+    <<: *build
+    volumes:
+      - sync_volume:/sync  # ボリュームを共有
+      - type: bind
+        source: bind/Client1/settings_client.ini
+        target: /settings_client.ini
+      - type: bind
+        source: bind/Client1/data/sample_data.csv
+        target: /data/data.csv
+    working_dir: /
+    command:
+      - /bin/bash
+      - '-c'
+      - |
+        # NOTE: firm_demo0_eimと実行が被らないように終了ファイルを確認するまで実行しない
+        while [ ! -f /sync/firm_demo0_eim_done ]; do sleep 1; done && \
+        ./matching ./settings_client.ini /data/data.csv && \
+        touch /sync/firm_demo1_eim_done  # 終了ファイルの作成
+    depends_on:
+      - firm_demo0_eim
+
+  firm_demo1_synth:
+    <<: *build
+    volumes:
+      - sync_volume:/sync  # ボリュームを共有
+      - type: bind
+        source: bind/Client1/settings_client.ini
+        target: /settings_client.ini
+    working_dir: /
+    command:
+      - /bin/bash
+      - '-c'
+      - |
+        # NOTE: firm_demo1_eimと実行が被らないように終了ファイルを確認するまで実行しない
+        while [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
+        ./synth ./settings_client.ini
+    depends_on:
+      - firm_demo1_eim
+
+volumes:
+  sync_volume:
+    driver: local
