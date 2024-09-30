@@ -1,6 +1,6 @@
 # 概要
 Gramine-EIM-Synthを実行する方法について記載．  
-Dockerによるデモを実行する [demo_docker](../../demo_docker/README.md) も参考．
+Dockerによるデモを実行する [demo_docker](../demo_docker/README.md) も参考．
 
 Gramine Serverが立ち上がっている状態で2つのClientがそれぞれ実行する必要があることに注意．
 
@@ -9,10 +9,9 @@ Gramine Serverが立ち上がっている状態で2つのClientがそれぞれ�
 
 通信や認証の設定を記載した設定ファイルを用意する．
 設定ファイルは事業者ごとに用意する．
-ファイル名や配置場所は何でも良い．
 
 フォーマットはdemo_dockerの設定ファイルを参照．
-- [settings.ini](../../demo_docker/bind/Client0/settings.ini)
+- [settings.ini](../demo_docker/bind/Client0/settings.ini)
 
 設定ファイルのうち以下の値はGramine Serverに依存して決まるため、検証用Gramine Serverを利用したい場合はAcompanyの担当者から配布された値を設定する．
 
@@ -28,7 +27,7 @@ REQUIRED_MRSIGNER = ; 検証用環境の`REQUIRED_MRSIGNER`が必要な場合は
 ```
 
 以下のRAに関する設定は各Firmが個別で行う必要がある．
-いくつかの値については推奨値が書き込まれている．
+いくつかの値については推奨値が書き込まれているので基本的には変更不要．
 ```ini
 ; Gramine Serverに要求するEnclaveの最小Gramine ServerSVN（Security Version Number）を設定。
 ; Gramine Server側はEnclave設定XMLでこれを設定できる。
@@ -51,17 +50,23 @@ ALLOW_SW_HARDENING_NEEDED = 1
 
 
 ## データの用意
-各事業者ごとにGramine-EIM-Synthを取得するためのデータを用意する．
-ファイル名や配置場所は何でも良い． 
+1. 各事業者ごとにGramine-EIM-Synthを取得するためのデータを用意する．
+2. `demo_docker/bind/Client0/data/`直下に `*.csv`の形式で配置しておく．
+3. `demo_docker/docker-compose.yaml`内にある`source: bind/Client{0,1}/data/sample_data.csv`部分の`sample_data.csv`を、新たに配置したcsvの名前に変更．
 
 データの形式 : [data_in_out.md](./data_in_out.md)  
 データの詳しい動作保証要件 : [guarantee.md](./guarantee.md)
 
-## バイナリなどの取得
-// TODO: Docker
-# 実行
-**※ 実際にGramine Serverに対して通信しにいくため事前にGramine Serverが起動していることをGramine Server管理者に確認する．**  
-// TODO: Docker
+## Dockerでの実行
+**※ 実際にGramine Serverに対して通信しにいくため事前にGramine Serverが起動していることをGramine Server管理者に確認する．**
+
+```bash
+$ cd demo_docker
+$ docker compose up
+```
+
+## バイナリでの実行
+// TODO: バイナリ形式での利用は将来的にサポート予定
 
 
 ## ステータスコード
