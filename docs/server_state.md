@@ -24,7 +24,7 @@ Gramine-EIM-Synthの状態を把握するためのステータスについて記
 | status_code | message | 意味 |
 | ---- | ---- | ---- |
 | 0 | Server Initialized | 初期状態 |
-| 1 | First-File Received | 1つ目のファイルが受理された | 
+| 1 | First-File Received | 1つ目のファイルが受理された |
 | 2 | First-File Saved | 1つ目のファイルが保存され、2つ目のファイルを受理する準備が整った |
 | 3 | Second-File Received | 2つ目のファイルが受理された |
 | 4 | ID Matched | 1つ目のファイルと2つ目のファイルのIDマッチングが完了し、学習の準備が整った |
