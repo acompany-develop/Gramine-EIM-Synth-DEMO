@@ -24,8 +24,36 @@ Gramine-EIM-Synthの状態を把握するためのステータスについて記
 | status_code | message | 意味 |
 | ---- | ---- | ---- |
 | 0 | Server Initialized | 初期状態 |
-| 1 | First-File Received | 1つ目のファイルが受理された |
+| 1 | First-File Received | 1つ目のファイルが受理された | 
 | 2 | First-File Saved | 1つ目のファイルが保存され、2つ目のファイルを受理する準備が整った |
 | 3 | Second-File Received | 2つ目のファイルが受理された |
 | 4 | ID Matched | 1つ目のファイルと2つ目のファイルのIDマッチングが完了し、学習の準備が整った |
 | 5 | Model Trained | マッチング済みデータを元に学習が完了し、学習モデルダウンロードの準備が整った |
+## ステータスの遷移イメージ
+Clientが `matching`, `synth` バイナリを実行した時のServerの状態遷移図。  
+```mermaid
+sequenceDiagram
+    actor Client
+    participant Server
+    note right of Server: Server Initialized
+
+    Client->>Server: ./matching
+    activate Server
+    note right of Server: First-File Received
+    note right of Server: First-File Saved
+	Server-->>Client: "Successfully save csv to Server"
+    deactivate Server
+
+    Client->>Server: ./matching
+    activate Server
+    note right of Server: Second-File Received
+    note right of Server: ID Matched
+	Server-->>Client: "Successfully do matching"
+    deactivate Server
+
+    Client->>Server: ./synth
+    activate Server
+    note right of Server: Model Trained
+    Server-->>Client: model
+    deactivate Server
+```
