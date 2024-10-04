@@ -63,7 +63,7 @@ services:
       - |
         # NOTE: firm_demo1_eimと実行が被らないように終了ファイルを確認するまで実行しない
         while [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
-        ./synth ./settings_client.ini
+        ./synth ./settings_client.ini /data/model.pkl
     depends_on:
       - firm_demo1_eim
 
