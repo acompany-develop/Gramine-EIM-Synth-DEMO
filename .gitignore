@@ -1,0 +1,5 @@
+.trash/
+.DS_Store
+
+demo_docker/data/*.csv
+!demo_docker/data/100_*.csv
