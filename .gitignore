@@ -1,5 +1,5 @@
 .trash/
 .DS_Store
 
-demo_docker/data/*.csv
-!demo_docker/data/100_*.csv
+demo_docker/bind/data/*.csv
+!demo_docker/bind/data/100_*.csv

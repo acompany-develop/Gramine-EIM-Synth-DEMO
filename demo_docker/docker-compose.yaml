@@ -16,7 +16,7 @@ services:
         source: bind/Client0/settings_client.ini
         target: /settings_client.ini
       - type: bind
-        source: bind/Client0/data/sample_data.csv
+        source: bind/data/100_a.csv
         target: /data/data.csv
     working_dir: /
     command:
@@ -35,7 +35,7 @@ services:
         source: bind/Client1/settings_client.ini
         target: /settings_client.ini
       - type: bind
-        source: bind/Client1/data/sample_data.csv
+        source: bind/data/100_b.csv
         target: /data/data.csv
     working_dir: /
     command:
@@ -56,6 +56,9 @@ services:
       - type: bind
         source: bind/Client1/settings_client.ini
         target: /settings_client.ini
+      - type: bind
+        source: bind/output
+        target: /output
     working_dir: /
     command:
       - /bin/bash
@@ -63,7 +66,7 @@ services:
       - |
         # NOTE: firm_demo1_eimと実行が被らないように終了ファイルを確認するまで実行しない
         while [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
-        ./synth ./settings_client.ini /data/model.pkl
+        ./synth ./settings_client.ini /output/model.pkl
     depends_on:
       - firm_demo1_eim
 
