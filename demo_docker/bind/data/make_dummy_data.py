@@ -13,15 +13,15 @@ ID_COL_VALUE_LEN_LIMIT = 64
 NUM_UNIQUE_VALUES = 10
 
 # Constants for the two CSV files
-CSV1_NUM_RECORDS = 10000000
-CSV1_NUM_COLS = 10
+CSV1_NUM_RECORDS = 10000000 # *_a.csvの行数（header行除く）
+CSV1_NUM_COLS = 10 # *_a.csvの列数（ID列除く）
 
-CSV2_NUM_RECORDS = 10000000
-CSV2_NUM_COLS = 10
+CSV2_NUM_RECORDS = 10000000 # *_b.csvの行数（header行除く）
+CSV2_NUM_COLS = 10# *_b.csvの列数（ID列除く）
 
 # matched CSV
-NUM_RECORDS = 5000000
-NUM_COLS = CSV1_NUM_COLS + CSV2_NUM_COLS
+NUM_RECORDS = 5000000 # 結合後の行数（header行除く）
+NUM_COLS = CSV1_NUM_COLS + CSV2_NUM_COLS # 結合後の列数（ID列除く）
 
 
 def main() -> None:
@@ -80,7 +80,6 @@ def main() -> None:
     csv1_values = {}
     csv1_values['id'] = matched_ids + ["".join(random.choice(COL_VALUE_LETTERS) for _ in range(ID_COL_VALUE_LEN_LIMIT)) for _ in range(CSV1_NUM_RECORDS - NUM_RECORDS)]
     csv1_values.update({name: all_values[i][:CSV1_NUM_RECORDS] for i, name in enumerate(csv1_columns)})
-    # csv1_values['id']に、matched_idsを含む、CSV1_NUM_RECORDS個のIDを生成
     
     csv2_values = {}
     csv2_values['id'] = matched_ids + ["".join(random.choice(COL_VALUE_LETTERS) for _ in range(ID_COL_VALUE_LEN_LIMIT)) for _ in range(CSV2_NUM_RECORDS - NUM_RECORDS)]
@@ -98,7 +97,6 @@ def main() -> None:
     csv2_values[csv2_columns[0]] = csv2_join_ids
 
     # save csv files
-    # print(len(csv1_values), [c for c in csv1_values], len(csv2_values), [c for c in csv2_values])
     print([(k, len(v)) for k, v in csv1_values.items()])
     pd.DataFrame(csv1_values).to_csv(f"{CSV1_NUM_RECORDS}_a.csv", index=False)
     pd.DataFrame(csv2_values).to_csv(f"{CSV1_NUM_RECORDS}_b.csv", index=False)
