@@ -47,9 +47,9 @@ ALLOW_SW_HARDENING_NEEDED = 1
 ```
 
 ## データの用意
-1. 各事業者ごとにGramine-EIM-Synthを取得するためのデータを用意する。
-2. `demo_docker/bind/Client0/data/`直下に `*.csv`の形式で配置しておく。
-3. `demo_docker/docker-compose.yaml`内にある`source: bind/Client{0,1}/data/sample_data.csv`部分の`sample_data.csv`を、新たに配置したcsvの名前に変更。
+1. 各事業者ごとにGramine-EIM-Synthを取得するためのデータを用意
+2. `demo_docker/bind/Client0/data/`直下に `*.csv`の形式で配置
+3. `demo_docker/docker-compose.yaml`内にある`source: bind/data/100_a.csv`を、入力したいcsvファイルのパスに変更
 
 データの形式: [data_in_out.md](../docs/data_in_out.md)  
 データの詳しい動作保証要件: [guarantee.md](../docs/guarantee.md)
@@ -60,6 +60,7 @@ ALLOW_SW_HARDENING_NEEDED = 1
 
 ```bash
 $ cd demo_docker
+$ docker compose down -v
 $ docker compose up
 ```
 

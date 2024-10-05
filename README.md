@@ -13,16 +13,18 @@
 .
 ├── README.md
 ├── demo_docker
+│   ├── Dockerfile
 │   ├── README.md
 │   ├── bind
 │   │   ├── Client0
-│   │   │   ├── data
-│   │   │   │   └── sample_data.csv
 │   │   │   └── settings_client.ini
-│   │   └── Client1
-│   │       ├── data
-│   │       │   └── sample_data.csv
-│   │       └── settings_client.ini
+│   │   ├── Client1
+│   │   │   └── settings_client.ini
+│   │   ├── data
+│   │   │   ├── 100_a.csv
+│   │   │   ├── 100_b.csv
+│   │   │   ├── make_dummy_data.py
+│   │   └── output
 │   └── docker-compose.yaml
 └── docs
     ├── README.md
