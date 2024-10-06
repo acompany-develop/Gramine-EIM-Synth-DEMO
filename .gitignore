@@ -3,3 +3,5 @@
 
 demo_docker/bind/data/*.csv
 !demo_docker/bind/data/100_*.csv
+demo_docker/bind/output/*
+demo_docker/.logs/
