@@ -60,8 +60,19 @@ ALLOW_SW_HARDENING_NEEDED = 1
 
 ```bash
 $ cd demo_docker
-$ docker compose down -v
-$ docker compose up
+$ make run # `docker compose down -v && docker compose up`と同じ
+```
+
+なお、ctrl+c等で途中で中断すると、server_statusが `Server Initialized` ではない状態で異常終了してしまうため注意。
+異常終了した場合は、以下の `/stop`を叩くことでserverを再起動することにより初期化可能。（成果物も全て削除されます）
+
+```bash
+$ curl http://<IP>:8080/info
+{"health":"healthy","server_state":{"message":"Model Training","status_code":5},"version":"v0.0.1"}
+$ curl http://<IP>:8080/stop
+receive stop
+$ curl http://<IP>:8080/info # しばらく待ってから/infoを叩くと以下のようになる
+{"health":"healthy","server_state":{"message":"Server Initialized","status_code":0},"version":"v0.0.1"}
 ```
 
 ## バイナリでの実行
@@ -70,3 +81,46 @@ $ docker compose up
 `./matching <設定ファイルのパス> <入力csvのパス>` でcsvを送信   
 `./synth <設定ファイルのパス> <出力modelのパス>` で学習を行いモデルを取得  
 [シーケンス図](../docs/server_state.md#ステータスの遷移イメージ)も参照
+
+### 実行中の処理を強制終了した場合
+クライエントがCtrl+Cなどによって処理を途中で終了させた場合、サーバがリクエストを正しく捌けなくなることがある。
+異常な挙動が起きた場合は、[/stop](#stop) API を用いてサーバを停止させる。
+停止したサーバは自動で再起動されて正常状態に戻る。
+
+このリクエストも通らない場合は手動でサーバを再起動させる必要があるため管理者に連絡する。
+
+# API
+## /info
+**※ 適切な証明書があればinsecureオプションはつけなくて良い**  
+```console
+$ curl <IP>:8080/info
+```
+Server が正常に動いていれば
+```
+{"health":"healthy","server_state":{"message":"Model Training","status_code":5},"version":"v0.0.1"}
+```
+という文章が返ってくる。
+
+server_stateの取り得る値については、[server_state.md](server_state.md) を参照。
+
+## /healthcheck
+**※ 適切な証明書があればinsecureオプションはつけなくて良い**  
+```console
+$ curl <IP>:8080/healthcheck
+```
+Server が正常に動いていれば
+```
+Gramine-EIM-Synth Server is Running.
+```
+という文章が返ってくる。
+
+## /stop
+Gramine Serverを停止できる。
+停止したサーバは自動で再起動されるため、[実行中の処理を強制終了した場合](#実行中の処理を強制終了した場合) などサーバの状態をリセットしたい時に使う。
+```console
+$ curl <IP>:8080/stop
+```
+
+# 備考
+> <font color="Red">[!IMPORTANT]</font>  
+> `make run`実行時、標準出力とファイル出力でログを出力するが、障害調査時に`.logs/`の提出を依頼する可能性がある。
