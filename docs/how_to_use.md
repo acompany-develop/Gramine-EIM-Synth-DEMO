@@ -23,10 +23,23 @@ demo_dockerの[前準備](../demo_docker/README.md#前準備)、[実行](../demo
 このリクエストも通らない場合は手動でサーバを再起動させる必要があるため管理者に連絡する。
 
 # API
+## /info
+**※ 適切な証明書があればinsecureオプションはつけなくて良い**  
+```console
+$ curl <IP>:8080/info
+```
+Server が正常に動いていれば
+```
+{"health":"healthy","server_state":{"message":"Model Training","status_code":5},"version":"v0.0.1"}
+```
+という文章が返ってくる。
+
+server_stateの取り得る値については、[server_state.md](server_state.md) を参照。
+
 ## /healthcheck
 **※ 適切な証明書があればinsecureオプションはつけなくて良い**  
 ```console
-$ curl --insecure <IP>:<port>/healthcheck
+$ curl <IP>:8080/healthcheck
 ```
 Server が正常に動いていれば
 ```
@@ -38,7 +51,7 @@ Gramine-EIM-Synth Server is Running.
 Gramine Serverを停止できる。
 停止したサーバは自動で再起動されるため、[実行中の処理を強制終了した場合](#実行中の処理を強制終了した場合) などサーバの状態をリセットしたい時に使う。
 ```console
-$ curl --insecure <IP>:<port>/stop
+$ curl <IP>:8080/stop
 ```
 
 # 備考
