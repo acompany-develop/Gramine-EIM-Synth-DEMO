@@ -2,7 +2,9 @@ FROM ubuntu:22.04
 
 ARG VERSION
 
-RUN apt update && apt install -y wget unzip
+# timezoneをAsia/Tokyoに設定
+RUN apt update && apt install -y tzdata wget unzip
+ENV TZ=Asia/Tokyo
 RUN wget https://github.com/acompany-develop/Gramine-EIM-Synth-DEMO/releases/download/${VERSION}/lib-v${VERSION}-linux-x64.zip
 RUN unzip lib-v${VERSION}-linux-x64.zip
 RUN mkdir -p /usr/lib/x86_64-linux-gnu/ && cp -r usr-lib-x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/

@@ -64,8 +64,8 @@ services:
       - /bin/bash
       - '-c'
       - |
-        # NOTE: firm_demo1_eimと実行が被らないように終了ファイルを確認するまで実行しない
-        while [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
+        # NOTE: firm_demo0_eimとfirm_demo1_eimの実行完了を確認するまで実行しない
+        while [ ! -f /sync/firm_demo0_eim_done ] || [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
         ./synth ./settings_client.ini /output/model.pkl
     depends_on:
       - firm_demo1_eim
