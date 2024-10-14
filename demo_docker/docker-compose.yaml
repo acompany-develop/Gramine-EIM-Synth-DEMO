@@ -68,6 +68,7 @@ services:
         while [ ! -f /sync/firm_demo0_eim_done ] || [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
         ./synth ./settings_client.ini /output/model.pkl
     depends_on:
+      - firm_demo0_eim
       - firm_demo1_eim
 
 volumes:
