@@ -7,6 +7,10 @@ x-build: &build
     args:
       VERSION: "0.1.0"
 
+networks:
+  custom_network:
+    driver: bridge
+
 services:
   firm_demo0_eim:
     <<: *build
@@ -26,6 +30,8 @@ services:
         rm -f /sync/* && \
         ./matching ./settings_client.ini /data/data.csv && \
         touch /sync/firm_demo0_eim_done # 終了ファイルの作成
+    networks:
+      - custom_network
 
   firm_demo1_eim:
     <<: *build
@@ -48,6 +54,8 @@ services:
         touch /sync/firm_demo1_eim_done  # 終了ファイルの作成
     depends_on:
       - firm_demo0_eim
+    networks:
+      - custom_network  # 独立ネットワークにサービスを参加させる
 
   firm_demo1_synth:
     <<: *build
@@ -70,6 +78,8 @@ services:
     depends_on:
       - firm_demo0_eim
       - firm_demo1_eim
+    networks:
+      - custom_network
 
 volumes:
   sync_volume:

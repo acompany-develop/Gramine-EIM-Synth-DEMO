@@ -1,6 +1,7 @@
 run:
 	mkdir -p .logs
 	docker compose down -v
+	docker compose build --no-cache
 	docker compose up --build | tee .logs/$(shell date +'%y%m%d%H%M').log
 
 stop:
