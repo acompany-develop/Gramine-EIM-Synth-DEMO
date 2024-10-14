@@ -55,7 +55,7 @@ services:
     depends_on:
       - firm_demo0_eim
     networks:
-      - custom_network  # 独立ネットワークにサービスを参加させる
+      - custom_network
 
   firm_demo1_synth:
     <<: *build
