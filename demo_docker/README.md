@@ -55,43 +55,70 @@ ALLOW_SW_HARDENING_NEEDED = 1
 データの詳しい動作保証要件: [guarantee.md](../docs/guarantee.md)
 
 # 実行
-## Dockerでの実行
-**※ 実際にGramine Serverに対して通信しにいくため事前にGramine Serverが起動していることをGramine Server管理者に確認する。**
+**※ 実際にserverに対して通信しにいくため、接続先環境と接続情報は管理者に連絡し、[前準備](#前準備) を参考に設定を行うこと。**
 
+## Dockerでの実行方法
 ```bash
 $ cd demo_docker
-$ make run # `docker compose down -v && docker compose up`と同じ
+$ make run
 ```
 
-なお、ctrl+c等で途中で中断すると、server_statusが `Server Initialized` ではない状態で異常終了してしまうため注意。
-異常終了した場合は、以下の `/stop`を叩くことでserverを再起動することにより初期化可能。（成果物も全て削除されます）
+## バイナリでの実行方法
+### 前準備
+※ 以下、`${VERSION}`部分は`x.x.x`の形式で有効なバージョンを指定してください。有効なバージョン一覧は[こちら](https://github.com/acompany-develop/Gramine-EIM-Synth-DEMO/tags)を参照。
 
+以下のzipをダウンロードして展開し、依存ライブラリを環境内に配置する。
 ```bash
-$ curl http://<IP>:8080/info
-{"health":"healthy","server_state":{"message":"Model Training","status_code":5},"version":"v0.0.1"}
-$ curl http://<IP>:8080/stop
-receive stop
-$ curl http://<IP>:8080/info # しばらく待ってから/infoを叩くと以下のようになる
-{"health":"healthy","server_state":{"message":"Server Initialized","status_code":0},"version":"v0.0.1"}
+$ wget https://github.com/acompany-develop/Gramine-EIM-Synth-DEMO/releases/download/${VERSION}/lib-v${VERSION}-linux-x64.zip
+$ unzip lib-v${VERSION}-linux-x64.zip
+$ cp sgx_default_qcnl.conf /etc/sgx_default_qcnl.conf
+$ mkdir -p /usr/lib/x86_64-linux-gnu/ && cp -r usr-lib-x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/
+$ mkdir -p /usr/local/lib/x86_64-linux-gnu/ && cp -r usr-local-lib-x86_64-linux-gnu/* /usr/local/lib/x86_64-linux-gnu/
 ```
 
-## バイナリでの実行
-// TODO: バイナリ形式での利用は将来的にサポート予定  
-// 以下は現在予定している実行手順
-`./matching <設定ファイルのパス> <入力csvのパス>` でcsvを送信   
-`./synth <設定ファイルのパス> <出力modelのパス>` で学習を行いモデルを取得  
-[シーケンス図](../docs/server_state.md#ステータスの遷移イメージ)も参照
+以下のzipをダウンロードして展開し、実行用バイナリを配置する。
+```bash
+$ wget https://github.com/acompany-develop/Gramine-EIM-Synth-DEMO/releases/download/${VERSION}/Gramine-EIM-Synth-v${VERSION}-linux-x64.zip
+$ unzip Gramine-EIM-Synth-v${VERSION}-linux-x64.zip
+```
 
-### 実行中の処理を強制終了した場合
+### 実行方法
+```bash
+# csv送信
+$ ./matching <設定ファイルのパス> <入力csvのパス> 
+# 学習&モデル取得
+$ ./synth <設定ファイルのパス> <出力modelのパス(任意)>
+```
+
+## 注意事項
+### 実行中の処理を中断した場合
 クライエントがCtrl+Cなどによって処理を途中で終了させた場合、サーバがリクエストを正しく捌けなくなることがある。
 異常な挙動が起きた場合は、[/stop](#stop) API を用いてサーバを停止させる。
 停止したサーバは自動で再起動されて正常状態に戻る。
 
+```bash
+# serverの状態を確認
+$ curl http://<IP>:8080/info
+{"health":"healthy","server_state":{"message":"Model Training","status_code":5},"version":"v0.0.1"}
+# serverを強制再起動
+$ curl http://<IP>:8080/stop
+receive stop
+# serverの状態を確認（しばらく待ってから/infoを叩くと以下のようになる）
+$ curl http://<IP>:8080/info
+{"health":"healthy","server_state":{"message":"Server Initialized","status_code":0},"version":"v0.0.1"}
+```
+
 このリクエストも通らない場合は手動でサーバを再起動させる必要があるため管理者に連絡する。
 
-# API
+### docker-composeを複数端末で実行した場合
+同じマシン内で複数terminalで同時に実行すると、リソース名が競合し、想定外挙動になる。そのため、必ずリnetwork名、service名、volume名等を全て変更して実行すること。
+
+### 想定外の問題が発生した場合
+`make run`実行時、標準出力とファイル出力でログを出力している。
+障害調査時には`demo_docker/.logs/`の提出を依頼する可能性がある。
+
+# server操作用API仕様
 ## /info
-**※ 適切な証明書があればinsecureオプションはつけなくて良い**  
 ```console
 $ curl <IP>:8080/info
 ```
@@ -101,7 +128,7 @@ Server が正常に動いていれば
 ```
 という文章が返ってくる。
 
-server_stateの取り得る値については、[server_state.md](server_state.md) を参照。
+server_stateの取り得る値については、[ステータス一覧](../docs/server_state.md#ステータス一覧（変更可能性あり）)を参照
 
 ## /healthcheck
 **※ 適切な証明書があればinsecureオプションはつけなくて良い**  
@@ -121,6 +148,6 @@ Gramine Serverを停止できる。
 $ curl <IP>:8080/stop
 ```
 
-# 備考
+## 注意事項
 > <font color="Red">[!IMPORTANT]</font>  
-> `make run`実行時、標準出力とファイル出力でログを出力するが、障害調査時に`.logs/`の提出を依頼する可能性がある。
+> `/info`, `/healthcheck`, `/stop`をリクエストする際は、想定外の挙動が起きる可能性があるためhttpsではなくhttpを利用してください。
