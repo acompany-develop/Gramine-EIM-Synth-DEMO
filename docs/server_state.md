@@ -6,17 +6,19 @@ Gramine-EIM-Synthの状態を把握するためのステータスについて記
 ```
 $ curl <IP>:8080/info
 ```
+※ http未対応につきhttpsで叩くと想定外挙動になるため注意
 
 # レスポンス形式（変更可能性あり）
 以下の形式のjson文字列が返ってくる。（実際は改行なし）
 ```json
 {
-	"health": "healthy",
-	"server_state": {
+    "health": "healthy",
+    "server_state": 
+    {
         "message": "Server Initialized",
         "status_code": 0
-	},
-	"version": "v0.0.1"
+    },
+    "version": "v0.0.1"
 }
 ```
 
@@ -46,10 +48,8 @@ sequenceDiagram
     Server->>DB: Get STATUS
     alt STATUS = Server Initialized
         Server-->>Client: STATUS = Server Initialized
-        Client->>Server: POST /status (First-File Received)
-        Server->>DB: Update STATUS to FIRST_FILE_RECEIVED
-        Server-->>Client: 200 OK
         Client->>Server: POST /matching/send_data (First CSV)
+        Server->>DB: Update STATUS to FIRST_FILE_RECEIVED
         Server->>DB: Save CSV1
         Server->>DB: Update STATUS to FIRST_FILE_SAVED
         Server-->>Client: 200 OK
@@ -61,11 +61,9 @@ sequenceDiagram
     Client->>+Server: GET /info (Check Server Status)
     Server->>DB: Get STATUS
     alt STATUS = FIRST_FILE_SAVED
-        Server-->>Client: STATUS = FIRST_FILE_SAVED
-        Client->>Server: POST /status (Second-File Received)
-        Server->>DB: Update STATUS to SECOND_FILE_RECEIVED
-        Server-->>Client: 200 OK
         Client->>Server: POST /matching/send_data (Second CSV)
+        Server->>DB: Update STATUS to SECOND_FILE_RECEIVED
+        Server-->>Client: STATUS = FIRST_FILE_SAVED
         DB->>Server: Read CSV1
         Server->>Server: Perform Matching
         Server->>DB: Save Matching Result
@@ -78,10 +76,8 @@ sequenceDiagram
             Server-->>Client: STATUS = FIRST_FILE_RECEIVED
         end
         Server-->>Client: STATUS = FIRST_FILE_SAVED
-        Client->>Server: POST /status (Second-File Received)
-        Server->>DB: Update STATUS to SECOND_FILE_RECEIVED
-        Server-->>Client: 200 OK
         Client->>Server: POST /matching/send_data (Second CSV)
+        Server->>DB: Update STATUS to SECOND_FILE_RECEIVED
         DB->>Server: Read CSV1
         Server->>Server: Perform Matching
         Server->>DB: Save Matching Result
@@ -96,7 +92,7 @@ sequenceDiagram
     Server->>DB: Get STATUS
     alt STATUS = ID_MATCHED
         Server-->>Client: STATUS = ID_MATCHED
-        Client->>Server: POST /status (Model Training)
+        Client->>Server: GET /synth/train
         Server->>DB: Update STATUS to TRAINING
         Server->>Server: Start Model Training
     else STATUS != ID_MATCHED
