@@ -51,7 +51,12 @@ services:
         # NOTE: firm_demo0_eimと実行が被らないように終了ファイルを確認するまで実行しない
         while [ ! -f /sync/firm_demo0_eim_done ]; do sleep 1; done && \
         ./matching ./settings_client.ini /data/data.csv && \
-        touch /sync/firm_demo1_eim_done  # 終了ファイルの作成
+        if [ $? -eq 0 ]; then \
+          touch /sync/firm_demo1_eim_done; \
+          rm -f /sync/firm_demo1_eim_failed; \
+        else \
+          touch /sync/firm_demo1_eim_failed; \
+        fi
     depends_on:
       - firm_demo0_eim
     networks:
@@ -73,6 +78,7 @@ services:
       - '-c'
       - |
         # NOTE: firm_demo0_eimとfirm_demo1_eimの実行完了を確認するまで実行しない
+        if [ -f /sync/firm_demo1_eim_failed ]; then exit 1; fi && \
         while [ ! -f /sync/firm_demo0_eim_done ] || [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
         ./synth ./settings_client.ini /output/model.pkl
     depends_on:
