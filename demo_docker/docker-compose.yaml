@@ -78,8 +78,10 @@ services:
       - '-c'
       - |
         # NOTE: firm_demo0_eimとfirm_demo1_eimの実行完了を確認するまで実行しない
-        if [ -f /sync/firm_demo1_eim_failed ]; then exit 1; fi && \
-        while [ ! -f /sync/firm_demo0_eim_done ] || [ ! -f /sync/firm_demo1_eim_done ]; do sleep 1; done && \
+        while [ ! -f /sync/firm_demo0_eim_done ] || [ ! -f /sync/firm_demo1_eim_done ]; do \
+            if [ -f /sync/firm_demo1_eim_failed ]; then exit 1; fi && \
+            sleep 1; \
+        done && \
         ./synth ./settings_client.ini /output/model.pkl
     depends_on:
       - firm_demo0_eim
