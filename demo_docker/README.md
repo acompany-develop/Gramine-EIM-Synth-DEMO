@@ -63,6 +63,11 @@ $ cd demo_docker
 $ make run
 ```
 
+### 注意事項
+amd64でコンパイルしたバイナリを実行するために、platformを`linux/amd64`に指定しています。この指定下でarm64ベースのmacを使用する場合[Dockerイメージのビルドに失敗するため、Docker DesktopにおいてRossetaを無効化](https://github.com/docker/for-mac/issues/7255)してください。
+
+
+
 ## バイナリでの実行方法
 ### 前準備
 ※ 以下、`${VERSION}`部分は`x.x.x`の形式で有効なバージョンを指定してください。有効なバージョン一覧は[こちら](https://github.com/acompany-develop/Gramine-EIM-Synth-DEMO/tags)を参照。
@@ -90,7 +95,10 @@ $ ./matching <設定ファイルのパス> <入力csvのパス>
 $ ./synth <設定ファイルのパス> <出力modelのパス(任意)>
 ```
 
-## 注意事項
+### 注意事項
+arm64ベースのmacを使用する場合、SIP(System Integrity Protection)が有効なため、後述の`/usr`ディレクトリにファイルを配置することはできません。クラウドでamd64ベースのインスタンスを立てるか、上記のDockerを用いる方法を利用してください。
+
+## 全体注意事項
 ### 実行中の処理を中断した場合
 クライエントがCtrl+Cなどによって処理を途中で終了させた場合、サーバがリクエストを正しく捌けなくなることがある。
 異常な挙動が起きた場合は、[/stop](#stop) API を用いてサーバを停止させる。
