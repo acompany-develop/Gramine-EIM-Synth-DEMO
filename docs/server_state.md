@@ -18,7 +18,7 @@ $ curl <IP>:8080/info
         "message": "Server Initialized",
         "status_code": 0
     },
-    "version": "v0.0.1"
+    "version": "v1.0.5"
 }
 ```
 
