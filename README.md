@@ -14,6 +14,7 @@
 ├── README.md
 ├── demo_docker
 │   ├── Dockerfile
+│   ├── Makefile
 │   ├── README.md
 │   ├── bind
 │   │   ├── Client0
@@ -23,14 +24,17 @@
 │   │   ├── data
 │   │   │   ├── 100_a.csv
 │   │   │   ├── 100_b.csv
-│   │   │   ├── make_dummy_data.py
+│   │   │   └── make_dummy_data.py
 │   │   └── output
 │   └── docker-compose.yaml
-└── docs
-    ├── README.md
-    ├── common_error.md
-    ├── data_in_out.md
-    ├── guarantee.md
-    ├── how_to_use.md
-    └── server_state.md
+├── docs
+│   ├── README.md
+│   ├── common_error.md
+│   ├── data_in_out.md
+│   ├── guarantee.md
+│   ├── how_to_use.md
+│   └── server_state.md
+└── licenses
+    ├── LICENSE_gramine
+    └── LICENSE_linux-sgx
 ```
